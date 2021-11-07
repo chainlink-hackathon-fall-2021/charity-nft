@@ -1,57 +1,79 @@
-
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.7;
 
-import "@openzepplin/contracts/token/ERC721/extensions/ERC721Storage.sol";
-import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-
-
+import "@openzeppelin/contracts/token/ERC1155/presets/ERC1155PresetMinterPauser.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 /**
- * @title The FundMeCampaign contract
- * @notice Each Campaign is an NFT
+ * @title FundMeCampaign
+ * @dev Implements ERC155
  */
+contract FundMeCampaigns is ERC1155PresetMinterPauser, Ownable {
+    uint256 public campaignCount;
 
-contract FundMeCampaigns is ERC721Storage, VRFConsumerBase {
+    struct Campaign {
+        // key attributes for any campaign
+        uint256 uid;
+        string name;
+        string description;
+        string sponsorLegalName;
+        string sponsorContact;
+        uint256 startDate;
+        uint256 endDate;
+        uint256 fundingTarget;
+        uint256 fundsCommitted;
+        bool approvedCampaign;
+        bool active;
+    }
 
-  // variables needed for chainlink
+    // Campaign[] public campaigns;
+    Campaign[] public campaigns;
+    // mapping(uint => Campaign) public campaigns;
 
-  AggregatorV3Interface internal priceFeed;
-  bytes32 internal keyHash;
-  uint256 internal fee;
-  address public VRFCoordinator;
-  address public LinkToken;
+    mapping(uint256 => string) private _uris;
 
-  struct Campaign {
-   // key attributes for any campaign
-   string name;
-   string description;
-   uint startDate;
-   uint endDate;
-   uint256 fundingTarget;
-   uint256 fundsCommitted;
-   bool approvedCampaign;  
-   string sponsorLegalName;
-   string sponsorContact;    
-  }
+    constructor() public ERC1155PresetMinterPauser("") {
+        campaignCount = 0;
+    }
 
-  Campaigns[] public campaigns;
+   function uri(uint256 _campaignTokenId) override public view returns (string memory) {
+     return(_uris[_campaignTokenId]);
+   }
 
-  constructor(address _VRFCoordinator, address _LinkToken, bytes32 _kehash, address _priceFeed) 
-  public
-  VRFConsumerBase(_VRFCoordinator, _LinkToken)
-  ER721("FundMeCampaign", "FMC")
-  {
-     VRFCoordinator = _VRFCoordinator;
-     priceFeed = AggregatorV3Interface(_priceFeed);
-     LinkToken = _LinkToken;
-     keyhash = _keyhash;
-     fee = 0.1 * 10**18; //0.1 Link
-  }
+   function setTokenUri(uint256 _campaignTokenId, string memory _uri) public onlyOwner {
+       require(bytes(_uris[_campaignTokenId]).length == 0, "Cannot change campaign metadata twice");
+       _uris[_campaignTokenId] = _uri;
+   }
 
-
+    function addNewCampaign(
+        string memory _name,
+        string memory _description,
+        string memory _sponsorLegalName,
+        string memory _sponsorContact,
+        uint256 _startDate,
+        uint256 _endDate,
+        uint256 _fundingTarget,
+        uint256 _fundsCommitted
+    ) external {
+        campaignCount++;
+        uint256 campaignTokenId = campaignCount;
+        Campaign memory campaign = Campaign(
+            campaignCount,
+            _name,
+            _description,
+            _sponsorLegalName,
+            _sponsorContact,
+            _startDate,
+            _endDate,
+            _fundingTarget,
+            _fundsCommitted,
+            false,
+            false
+        );
+        campaigns.push(campaign);
+        campaigns[campaignCount] = campaign;
+        _mint(msg.sender, campaignTokenId, 1, "");
+    }
 }
-
-
