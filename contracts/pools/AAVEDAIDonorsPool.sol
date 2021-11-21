@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.12;
 
-import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ILendingPool} from "@aave/protocol-v2/contracts/interfaces/ILendingPool.sol";
@@ -9,7 +9,7 @@ import {IAToken} from "@aave/protocol-v2/contracts/interfaces/IAToken.sol";
 
 // this is a basic AAVE donors pool for DAI
 // @todo add more documentation
-contract AAVEDAIDonorsPool is Context {
+contract AAVEDAIDonorsPool is Ownable {
 
     using SafeMath for uint256;
     
@@ -27,7 +27,6 @@ contract AAVEDAIDonorsPool is Context {
     }
     
     function deposit(uint256 _amount) external {
-        deposits[_msgSender()] = deposits[_msgSender()].add(_amount);
         // send dai from user to this contract
         require(dai.transferFrom(_msgSender(), address(this), _amount), "DAI transfer failed!");
         // then deposit to aave
@@ -37,22 +36,40 @@ contract AAVEDAIDonorsPool is Context {
             address(this),
             0
           );
-        tvl = tvl.add(_amount);
+        deposits[_msgSender()] = deposits[_msgSender()].add(_amount);
+        tvl = tvl.add(_amount); // track principal tvl
+        // @todo mint dao token
+        // @todo mint share token token
         // @todo add assertions
     }
     
     function withdraw(uint256 _amount) external {
         require(deposits[_msgSender()] >= _amount, "You cannot withdraw more than deposited!");
+        (, uint256 shareValue) = getShare();
+        deposits[_msgSender()] = deposits[_msgSender()].sub(_amount);
+        tvl = tvl.sub(_amount);
 
         aaveLendingPool.withdraw(
             address(dai),
-            _amount,
+            shareValue,
             _msgSender()
           );
-        require(dai.transferFrom(address(this), _msgSender(), _amount), "DAI withdraw transfer failed!");
-        
-        deposits[_msgSender()] = deposits[_msgSender()].sub(_amount);
-        tvl = tvl.sub(_amount);
+        // @todo burn dao token if deposited amount goes to zero
         // @todo add assertions
-    } 
+    }
+
+    function getShare() public view returns (uint256 share, uint256 shareValue){
+        (share, shareValue) = _getShareOf(_msgSender());
+    }
+
+    function getEarnings() public view returns (uint256 earnings) {
+        uint256 poolBalance = aToken.balanceOf(address(this));
+        (, earnings) = poolBalance.trySub(tvl);
+    }
+
+    function _getShareOf(address _user) private view returns (uint256 share, uint256 shareValue){
+        uint256 poolBalance = aToken.balanceOf(address(this));
+        (, share) = deposits[_user].tryDiv(tvl);
+        (, shareValue) = poolBalance.tryMul(share);
+    }
 }
