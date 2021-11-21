@@ -30,9 +30,10 @@ module.exports = {
     networks: {
         hardhat: {
             // // If you want to do some forking, uncomment this
-            // forking: {
-            //   url: MAINNET_RPC_URL
-            // }
+            forking: {
+              url: MAINNET_RPC_URL,
+              blockNumber: 21720170
+            }
         },
         localhost: {
         },
@@ -97,6 +98,9 @@ module.exports = {
                 version: "0.8.7"
             },
             {
+                version: "0.6.12"
+            },
+            {
                 version: "0.6.6"
             },
             {
@@ -104,6 +108,9 @@ module.exports = {
             }
         ]
     },
+    paths: {
+        sources: "./contracts",
+     },
     mocha: {
         timeout: 100000
     }
