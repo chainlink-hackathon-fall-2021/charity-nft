@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "hardhat test test/AAVEDonorsPool.spec.js --network hardhat",
+    "test": "npx hardhat test",
     "test-integration": "hardhat test test/integration/APIConsumer_int_test.js --network kovan && hardhat test test/integration/RandomNumberConsumer_int_test.js --network kovan",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"

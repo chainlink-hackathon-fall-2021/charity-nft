@@ -110,9 +110,10 @@ module.exports = {
     },
     paths: {
         sources: "./contracts",
+        tests: "./contracts/test",
      },
     mocha: {
-        timeout: 100000
+        timeout: 100000,
     }
 }
 

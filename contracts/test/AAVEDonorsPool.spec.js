@@ -56,35 +56,30 @@ describe("AAVEDonorsPool", function () {
     });
     it("Should be able to make a deposit", async function () {
       console.log('>>>','pool atoken balance', (await aToken.balanceOf(pool.address)).toString());
-      console.log('>>>','pool atoken getScaledUserBalanceAndSupply', (await aToken.getScaledUserBalanceAndSupply(pool.address)).toString());
       await pool.connect(user).deposit(depositAmount);
+      console.log('<<<','pool atoken balance', (await aToken.balanceOf(pool.address)).toString());
+      console.log('<<<','user share', (await pool.connect(user).getShare()).toString());
       expect(await dai.balanceOf(user.address)).to.equal(BigNumber.from(mintAmount).sub(BigNumber.from(depositAmount)));
       expect(await aToken.balanceOf(pool.address)).to.equal(depositAmount);
       const [userShare, shareValue] = await pool.connect(user).getShare();
       expect(userShare).to.be.equal(1); // 100%
       expect(shareValue).to.be.equal(depositAmount);
-      console.log('<<<','pool atoken balance', (await aToken.balanceOf(pool.address)).toString());
-      console.log('<<<','pool atoken getScaledUserBalanceAndSupply', (await aToken.getScaledUserBalanceAndSupply(pool.address)).toString());
-      console.log('<<<','user share', (await pool.connect(user).getShare()).toString());
     });
 
     it("Should be able to withdraw deposited amount", async function () {
       console.log('>>>','pool atoken balance', (await aToken.balanceOf(pool.address)).toString());
-      console.log('>>>','pool atoken getScaledUserBalanceAndSupply', (await aToken.getScaledUserBalanceAndSupply(pool.address)).toString());
       console.log('>>>','user share', (await pool.connect(user).getShare()).toString());
       console.log('>>>','pool earnings', (await pool.getEarnings()).toString());
-      let [userShare, shareValue] = await pool.connect(user).getShare();
       await pool.connect(user).withdraw(depositAmount);
-      // expect(await dai.balanceOf(user.address)).to.equal(shareValue);
-      expect(await aToken.balanceOf(pool.address)).to.equal(0);
-      [userShare, shareValue] = await pool.connect(user).getShare();
-      expect(userShare).to.be.equal(0); // 100%
-      expect(shareValue).to.be.equal(0); // remove principal + earnings
       console.log('<<<','pool atoken balance', (await aToken.balanceOf(pool.address)).toString());
-      console.log('<<<','pool atoken getScaledUserBalanceAndSupply', (await aToken.getScaledUserBalanceAndSupply(pool.address)).toString());
       console.log('<<<','user share', (await pool.connect(user).getShare()).toString());
       console.log('<<<','user dai balance', (await dai.balanceOf(user.address)).toString());
       console.log('<<<','pool earnings', (await pool.getEarnings()).toString());
+      // expect(await dai.balanceOf(user.address)).to.equal(shareValue);
+      expect(await aToken.balanceOf(pool.address)).to.equal(0);
+      const [userShare, shareValue] = await pool.connect(user).getShare();
+      expect(userShare).to.be.equal(0); // 100%
+      expect(shareValue).to.be.equal(0); // remove principal + earnings
     });
 
   });
