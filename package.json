@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "hardhat test test/unit/PriceConsumerV3_unit_test.js --network hardhat && hardhat test test/unit/APIConsumer_unit_test.js --network hardhat && hardhat test test/unit/RandomNumberConsumer_unit_test.js --network hardhat && hardhat test test/unit/KeepersCounter_unit_test.js --network hardhat",
+    "test": "npx hardhat test",
     "test-integration": "hardhat test test/integration/APIConsumer_int_test.js --network kovan && hardhat test test/integration/RandomNumberConsumer_int_test.js --network kovan",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
@@ -23,13 +23,15 @@
     "hardhat-deploy": "^0.7.0-beta.39"
   },
   "dependencies": {
+    "@aave/protocol-v2": "^1.0.1",
     "@appliedblockchain/chainlink-contracts": "0.0.4",
     "@appliedblockchain/chainlink-plugins-fund-link": "0.0.1",
     "@chainlink/contracts": "^0.2.2",
     "@chainlink/test-helpers": "0.0.5",
     "@chainlink/token": "^1.1.0",
+    "@conflux-/aragon-os": "^4.4.4",
     "@nomiclabs/hardhat-truffle5": "^2.0.0",
-    "@openzeppelin/contracts": "^4.3.2",
+    "@openzeppelin/contracts": "^3.4.0",
     "babel-eslint": "^10.1.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.22.0",
