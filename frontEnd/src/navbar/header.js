@@ -40,7 +40,7 @@ const Header = () => {
 
 	return (
 		<nav>
-			<div className="nav-wrapper indigo darken-4">
+			<div className="nav-wrapper black">
 			<a href="#" className="brand-logo center">ENDOW</a>
 			<ul className="left hide-on-med-and-down" id="nav-mobile" >
 				<UserId />
