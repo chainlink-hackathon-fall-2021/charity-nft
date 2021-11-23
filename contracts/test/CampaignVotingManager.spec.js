@@ -5,8 +5,8 @@ const { ethers } = require("hardhat");
 const { encodeCallScript } = require("./evmUtils");
 
 // only works using mombai hardhat testnet fork
-
-describe("CampaignVotingManager", function () {
+// @todo needs more work
+describe.skip("CampaignVotingManager", function () {
 
   let owner;
   let user;
@@ -23,6 +23,7 @@ describe("CampaignVotingManager", function () {
   describe('A user with intentions to create a campaign', function () {
 
     it("Should be able to open a voting session on dao", async function () {
+      // @todo add review by campaign metadata hash
       const tx = await campaignVotingManager.populateTransaction.review(4);
       // console.log('tx', tx);
       const action = { to: '0xD1eC165f01e61A8ef5630451786e47E4D440307F', calldata: tx.data }
