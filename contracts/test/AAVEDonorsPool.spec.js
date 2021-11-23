@@ -4,7 +4,7 @@ const { ethers } = require("hardhat");
 
 // only works using mombai hardhat testnet fork
 
-describe("AAVEDonorsPool", function () {
+describe.skip("AAVEDonorsPool", function () {
 
   const DAI = '0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F';
   const FAUCET = '0x0b3C23243106A69449e79C14c58BB49E358f9B10';
