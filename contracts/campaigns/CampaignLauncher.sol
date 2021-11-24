@@ -2,9 +2,6 @@
 
 pragma solidity ^0.6.12;
 
-// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.4.2/contracts/access/Ownable.sol";
-// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.4.2/contracts/math/SafeMath.sol";
-// import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.4.2/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -101,18 +98,14 @@ contract CampaignLauncher is Ownable {
 
     // @todo add reentrancy check
     // user calls the submit to cast newly created vote
-    function submit(string calldata _campaignName, uint256 _goal, uint256 _startDate, uint256 _endDate, string memory _cid) external{
-        bytes32 hash = getHash(_campaignName);
+    function submit(string calldata _campaignName) external{
+        bytes32 hash = hash(_campaignName);
         require(campaigns[hash]==0, "Campaign already exists");
         uint256 voteId = voting.newVote(abi.encodePacked(uint32(1)), _campaignName);
         token.mintCampaign(
             _msgSender(),
             voteId,
-           hash,
-           _goal,
-           _startDate,
-           _endDate,
-           _cid
+           bytes(_campaignName)
         );
         reviewQueue.push(voteId, hash);
         campaigns[hash] = voteId;
@@ -210,7 +203,7 @@ contract CampaignLauncher is Ownable {
         maxOpenDonations = _maxOpenDonations;
     }
 
-    function getHash(string memory s) private pure returns (bytes32) {
+    function hash(string memory s) private pure returns (bytes32) {
         return keccak256(bytes(s));
     }
     

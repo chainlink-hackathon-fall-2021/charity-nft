@@ -21,6 +21,8 @@ contract AAVEDAIDonorsPool is Ownable, IDonor {
 
     using SafeMath for uint256;
     
+    IToken token;
+    
     // hardcoding dai for hackathon simplicity
     IERC20 public dai = IERC20(0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F);
     IAToken public aToken = IAToken(0x639cB7b21ee2161DF9c882483C9D55c90c20Ca3e);
