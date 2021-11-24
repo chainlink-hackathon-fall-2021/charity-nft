@@ -7,12 +7,17 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {ILendingPool} from "@aave/protocol-v2/contracts/interfaces/ILendingPool.sol";
 import {IAToken} from "@aave/protocol-v2/contracts/interfaces/IAToken.sol";
+import "../tokens/IToken.sol";
+import "./IDonor.sol";
+
 
 // this is a basic AAVE donors pool for DAI
 // @todo add more documentation
-contract AAVEDAIDonorsPool is Ownable {
+contract AAVEDAIDonorsPool is Ownable, IDonor {
 
     using SafeMath for uint256;
+    
+    IToken token;
     
     // hardcoding dai for hackathon simplicity
     IERC20 public dai = IERC20(0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F); // 10000000000000000000 => 1$ Dai
@@ -23,8 +28,9 @@ contract AAVEDAIDonorsPool is Ownable {
     uint256 public tvl;
     uint256 public tvd;
     
-    constructor() public {
+    constructor(IToken _token) public {
         dai.approve(address(aaveLendingPool), type(uint256).max);
+        token = _token;
     }
     
     function deposit(uint256 _amount) external {
@@ -58,6 +64,18 @@ contract AAVEDAIDonorsPool is Ownable {
         // @todo burn dao token if deposited amount goes to zero
         // @todo add assertions
     }
+    
+    // sends dai to the campaign owner
+    function donate(uint256 _tokenId) external override {
+        require(token.exists(_tokenId), "Invalid campaign token");
+        // @todo calculate pool earnings
+        aaveLendingPool.withdraw(
+            address(dai),
+            1**18, // @todo replace this with pool earnings, $1 sent for testing
+            token.getBeneficiary(_tokenId)
+          );
+        // @todo grant rights to donors to receive PoD tokens
+    }
 
     function getShare() public view returns (uint256 share, uint256 shareValue){
         (share, shareValue) = _getShareOf(_msgSender());
@@ -72,5 +90,9 @@ contract AAVEDAIDonorsPool is Ownable {
         uint256 poolBalance = aToken.balanceOf(address(this));
         (, share) = deposits[_user].tryDiv(tvl);
         (, shareValue) = poolBalance.tryMul(share);
+    }
+
+    function setTokenInterface(IToken _token) external onlyOwner() {
+        token = _token;
     }
 }
