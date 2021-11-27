@@ -71,10 +71,7 @@ contract MockOracle is ChainlinkRequestInterface, LinkTokenReceiver {
         bytes calldata _data
     ) external override onlyLINK checkCallbackAddress(_callbackAddress) {
         bytes32 requestId = keccak256(abi.encodePacked(_sender, _nonce));
-        require(
-            commitments[requestId].callbackAddr == address(0),
-            "Must use a unique ID"
-        );
+        require(commitments[requestId].callbackAddr == address(0), "Must use a unique ID");
         // solhint-disable-next-line not-rely-on-time
         uint256 expiration = now.add(EXPIRY_TIME);
 
@@ -109,16 +106,11 @@ contract MockOracle is ChainlinkRequestInterface, LinkTokenReceiver {
     {
         Request memory req = commitments[_requestId];
         delete commitments[_requestId];
-        require(
-            gasleft() >= MINIMUM_CONSUMER_GAS_LIMIT,
-            "Must provide consumer enough gas"
-        );
+        require(gasleft() >= MINIMUM_CONSUMER_GAS_LIMIT, "Must provide consumer enough gas");
         // All updates to the oracle's fulfillment should come before calling the
         // callback(addr+functionId) as it is untrusted.
         // See: https://solidity.readthedocs.io/en/develop/security-considerations.html#use-the-checks-effects-interactions-pattern
-        (bool success, ) = req.callbackAddr.call(
-            abi.encodeWithSelector(req.callbackFunctionId, _requestId, _data)
-        ); // solhint-disable-line avoid-low-level-calls
+        (bool success, ) = req.callbackAddr.call(abi.encodeWithSelector(req.callbackFunctionId, _requestId, _data)); // solhint-disable-line avoid-low-level-calls
         return success;
     }
 
@@ -137,10 +129,7 @@ contract MockOracle is ChainlinkRequestInterface, LinkTokenReceiver {
         bytes4,
         uint256 _expiration
     ) external override {
-        require(
-            commitments[_requestId].callbackAddr != address(0),
-            "Must use a unique ID"
-        );
+        require(commitments[_requestId].callbackAddr != address(0), "Must use a unique ID");
         // solhint-disable-next-line not-rely-on-time
         require(_expiration <= now, "Request is not expired");
 
@@ -166,10 +155,7 @@ contract MockOracle is ChainlinkRequestInterface, LinkTokenReceiver {
      * @param _requestId The given request ID to check in stored `commitments`
      */
     modifier isValidRequest(bytes32 _requestId) {
-        require(
-            commitments[_requestId].callbackAddr != address(0),
-            "Must have a valid requestId"
-        );
+        require(commitments[_requestId].callbackAddr != address(0), "Must have a valid requestId");
         _;
     }
 

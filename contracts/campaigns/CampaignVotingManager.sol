@@ -8,6 +8,7 @@ contract CampaignVotingManager {
 
     IVoting private voting = IVoting(0x2c2e5397F336C29a991E9E1759085F9940ACe347);
     
+    
     uint256[] public votes;
     mapping(uint256 => bool) public results;
     mapping(uint256 => uint256) public yes;
