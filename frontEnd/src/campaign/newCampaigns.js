@@ -2,6 +2,8 @@ import M from 'materialize-css'
 import { useState } from 'react';
 import { LoremIpsum } from "lorem-ipsum";
 
+import {useApps, useOrganization, useApp} from '@aragon/connect-react'
+
 const lorem = new LoremIpsum({
     sentencesPerParagraph: {
       max: 8,
@@ -70,6 +72,11 @@ const NewCampaigns = () => {
         timeleft: '13'
 
     }
+
+    const [org, orgStatus] = useOrganization()
+    const [app, appStatus] = useApps()
+
+
     
     
     return (

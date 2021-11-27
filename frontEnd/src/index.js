@@ -17,10 +17,11 @@ const SERVER_URL = "https://ui9dcqkd2mzm.usemoralis.com:2053/server";
 
 ReactDOM.render(
   <React.StrictMode>
-   
+      <Connect location="endowtest.aragonid.eth" connector="thegraph">
         <MoralisProvider appId={APP_ID} serverUrl={SERVER_URL}>
           <App />
         </MoralisProvider>  
+      </Connect>
       
   </React.StrictMode>,
   document.getElementById("root")
