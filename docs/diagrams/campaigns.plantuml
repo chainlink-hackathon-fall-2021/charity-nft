@@ -1,0 +1,37 @@
+@startuml Campaigns
+title Endow Flows Happy Path
+skinparam strictuml true
+skinparam SequenceMessageAlignment center
+skinparam responseMessageBelowArrow true
+actor Campaigner #Pink
+actor Investor #Green
+boundary EnDow as App order 1
+entity DAO order 2
+database Blockchain order 3
+== Investors Invest In Endow ==
+Investor -> App : Invest DAI 
+App -> DAO : Issue EnDow Tokens
+DAO -> Blockchain : Mint EnDow Tokens
+Blockchain -> Investor : Endow Tokens
+== New Campaign Approval ==
+Campaigner -[#green]> App ++ : New Campaign Submission
+App -[#green]> DAO ++ : Conduct New Approval Vote
+DAO -[#green]> Blockchain ++ : Mint New Campaign NFT
+Blockchain -[#green]> Campaigner ++ : New Campaign NFT
+
+DAO -[#green]> Investor ++ : Campaign Open For Approval
+Investor -[#green]> App ++ : Investor Votes
+App -[#green]> DAO : Investor Votes
+DAO -[#green]> Blockchain : Mint Campaign NFT 
+Blockchain -[#green]> Campaigner : Campaign NFT minted
+Blockchain -[#green]> Investor : Campaign Open For Donations
+
+== Campaign Added To Pool ==
+
+group Step: DAO Added To Pool - Open For Donations
+  DAO -> App : Campaign Added to Pool
+  DAO -> Investor : Vote to Donate   
+  Investor -> Investor : Review/\nVote
+
+end group
+@enduml
