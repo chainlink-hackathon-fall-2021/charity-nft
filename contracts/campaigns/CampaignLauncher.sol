@@ -1,97 +1,191 @@
 // SPDX-License-Identifier: MIT
 
+pragma solidity ^0.6.12;
+
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "../aragon/IVoting.sol";
 import "../tokens/IToken.sol";
 import "../pools/IDonor.sol";
 
-pragma solidity ^0.6.12;
+// simple infinite circular queue
+library QueueLib {
+    
+    struct Queue {
+        mapping(uint256 => uint256) tokenId;
+        mapping(uint256 => bytes32) hash;
+        uint256 tail;
+        uint256 head;
+    }
+
+    function push(Queue storage _self, uint256 tokenId, bytes32 hash) public {
+        _self.tokenId[_self.tail] = tokenId;
+        _self.hash[_self.tail] = hash;
+        _self.tail=_self.tail + 1;
+    }
+
+    function peek(Queue storage _self) public view returns (uint256 tokenId, bytes32 hash) {
+        if(_self.head==_self.tail){
+            tokenId = 0;
+        }else{
+            tokenId = _self.tokenId[_self.head];
+            hash = _self.hash[_self.head];
+        }
+    }
+
+    function shift(Queue storage _self) public returns (uint256 tokenId, bytes32 hash) {
+        if(_self.head==_self.tail){
+            tokenId = 0;
+            hash = bytes32(0);
+        }else{
+            tokenId = _self.tokenId[_self.head];
+            hash = _self.hash[_self.head];
+            delete _self.tokenId[_self.head];
+            delete _self.hash[_self.head];
+            _self.head=_self.head + 1;
+        }
+    }
+
+    function size(Queue storage _self) public view returns(uint256 length) {
+        // @todo check overflow
+        length=_self.tail - _self.head;
+    }
+}
 
 // Contract added to the dao with permissions to create new votes
 // for the sake of simplicity, the process to add this contract to the dao is
 // out of the scope of this prototype
 contract CampaignLauncher is Ownable {
-    
-    IToken token;
-    IDonor donor;
-    
-    constructor(IToken _token, IDonor _donor) public {
-        token = _token;
-        donor = _donor;
-    }
 
+    using QueueLib for QueueLib.Queue;
+    
     // harcoded voting dao app to simplify hackathon
     IVoting private voting = IVoting(0x2c2e5397F336C29a991E9E1759085F9940ACe347);
     
-    mapping(bytes32=>uint256) public votes;
+    mapping(bytes32=>uint256) public campaigns;
+    mapping(uint256=>uint256) public donationVotes;
+    
+    QueueLib.Queue private reviewQueue;
+    QueueLib.Queue private donationQueue;
+
+    uint8 public maxOpenReviews;
+    uint8 public maxOpenDonations;
+
+    IToken private token;
+    IDonor private donor;
+
+    // chainlink keepers
+    address private campaignReviewKeeper;
+    address private campaignDonationKeeper;
+
+    modifier onlyOwnerOrReviewKeeper() {
+        require(owner() == _msgSender() || campaignReviewKeeper == _msgSender(), "Caller is not the owner nor review keeper");
+        _;
+    }
+
+    modifier onlyOwnerOrDonationKeeper() {
+        require(owner() == _msgSender() || campaignDonationKeeper == _msgSender(), "Caller is not the owner nor donation keeper");
+        _;
+    }
+    
+    constructor(IToken _token, IDonor _donor, uint8 _maxOpenReviews, uint8 _maxOpenDonations) public {
+        token = _token;
+        donor = _donor;
+        maxOpenReviews = _maxOpenReviews;
+        maxOpenDonations = _maxOpenDonations;
+    }
 
     // @todo add reentrancy check
     // user calls the submit to cast newly created vote
-    // _executionScript contains the callback to review(uint256 _tokenId)
     function submit(string calldata _campaignName) external{
-        // generate EVMScript
-        uint256 voteId = voting.newVote(getReviewScript(address(this),1,_campaignName), _campaignName);
         bytes32 hash = hash(_campaignName);
-        votes[hash] = voteId;
-        // @todo mint campaign token using dao voteId as tokenId
+        require(campaigns[hash]==0, "Campaign already exists");
+        uint256 voteId = voting.newVote(abi.encodePacked(uint32(1)), _campaignName);
         token.mintCampaign(
             _msgSender(),
             voteId,
-           "" // @todo send hash
+           bytes(_campaignName)
         );
+        reviewQueue.push(voteId, hash);
+        campaigns[hash] = voteId;
     }
 
     // @todo add reentrancy check 
-    // callback function called by the dao voting contract
-    function review(bytes32 _campaignName) external {
-        require(votes[_campaignName]>0, "campaign does not exists");
-        // @todo check somehow if the call comes from the dao
-        // user vote information at will, see IVoting interface
+    function review(bytes32 _hash) external onlyOwnerOrReviewKeeper() {
+        uint256 tokenId = campaigns[_hash];
+        require(tokenId>0, "campaign does not exist");
+        // see IVoting interface
         (
             bool open,
             bool executed,
-            uint64 startDate,
-            uint64 snapshotBlock,
-            uint64 supportRequired,
-            uint64 minAcceptQuorum,
-            uint256 yea,
-            uint256 nay,
-            uint256 votingPower,
-            bytes memory script
-        ) = voting.getVote(votes[_campaignName]);
+            /*uint64 startDate*/,
+            /*uint64 snapshotBlock*/,
+            /*uint64 supportRequired*/,
+            /*uint64 minAcceptQuorum*/,
+            /*uint256 yea*/,
+            /*uint256 nay*/,
+            /*uint256 votingPower*/,
+            /*bytes memory script*/
+        ) = voting.getVote(tokenId);
+        require(!open, "Campaign still in voting session");
+        (uint256 queuedTokenId,)=reviewQueue.shift();
+        require(tokenId==queuedTokenId, "Campaign not in review queue");
+        require(donationVotes[tokenId]==0, "Campaign already added to donors pool");
         if(executed){
-            _approve(votes[_campaignName]);
-        }else{
-            _reject(votes[_campaignName]);
+            donationQueue.push(tokenId, _hash);
+            uint256 voteId = voting.newVote(abi.encodePacked(uint32(1)), string(abi.encodePacked(bytes("Donate to Campaign #"), Strings.toString(tokenId))));
+            donationVotes[tokenId]=voteId;
         }
-        delete votes[_campaignName];
+        delete campaigns[_hash];
     }
 
-    function _approve(uint256 _tokenId) private {
-        // @todo add aditional logic to add this campaing to the donors pool
-        // @todo create a new vote to allow the campaing to participate in a funding session
-        voting.newVote(getDonateScript(address(donor),1,_tokenId), "campaignName");
+    function finalize(uint256 _tokenId) external onlyOwnerOrDonationKeeper() {
+        require(token.exists(_tokenId), "Campaign does not exist");
+        require(donationVotes[_tokenId]>0, "Campaign not in donors pool");
+        (uint256 tokenId,) = donationQueue.shift();
+        require(tokenId==_tokenId, "Campaign not in donation queue");
+        (
+            bool open,
+            bool executed,
+            /*uint64 startDate*/,
+            /*uint64 snapshotBlock*/,
+            /*uint64 supportRequired*/,
+            /*uint64 minAcceptQuorum*/,
+            /*uint256 yea*/,
+            /*uint256 nay*/,
+            /*uint256 votingPower*/,
+            /*bytes memory script*/
+        ) = voting.getVote(donationVotes[_tokenId]);
+        require(!open, "Campaign still in voting session");
+        if(executed){
+            donor.donate(_tokenId);
+        }
     }
 
-    function _reject(uint256 _tokenId) private {
-        // @todo do something if needed
+    function getNextReviewCampaign() external view returns (uint256 tokenId, bytes32 hash, uint256 size, uint256 limit){
+        (tokenId,hash) = reviewQueue.peek();
+        size = reviewQueue.size();
+        limit = maxOpenReviews;
     }
-    
-    // generating EVMScript here for hackathon simplicity
-    function getReviewScript(address _to, uint32 _executorId, string memory _data) private pure returns (bytes memory script) {
-        bytes32 hash = hash(_data);
-        bytes memory payload = abi.encodeWithSignature("review(bytes32)", hash);
-        script = abi.encodePacked(_executorId,bytes20(_to),uint32(payload.length), payload);
+
+    function getNextDonationToken() external view returns (uint256 tokenId, bytes32 hash, uint256 size, uint256 limit){
+        (tokenId,hash) = donationQueue.peek();
+        size = donationQueue.size();
+        limit = maxOpenDonations;
     }
-    
-    function getDonateScript(address _to, uint32 _executorId, uint256 _data) private pure returns (bytes memory script) {
-        bytes memory payload = abi.encodeWithSignature("donate(uint256)", _data);
-        script = abi.encodePacked(_executorId,bytes20(_to),uint32(payload.length), payload);
+
+    function getDonationVote(uint256 _tokenId) external view returns (uint256 voteId) {
+        voteId = donationVotes[_tokenId];
     }
-    
-    function hash(string memory s) private pure returns (bytes32) {
-		return keccak256(bytes(s));
-	}
+
+    function setCampaignReviewKeeper(address _campaignReviewKeeper) external onlyOwner() {
+        campaignReviewKeeper = _campaignReviewKeeper;
+    }
+
+    function setCampaignDonationKeeper(address _campaignDonationKeeper) external onlyOwner() {
+        campaignDonationKeeper = _campaignDonationKeeper;
+    }
 
     function setTokenInterface(IToken _token) external onlyOwner() {
         token = _token;
@@ -99,6 +193,18 @@ contract CampaignLauncher is Ownable {
 
     function setDonorInterface(IDonor _donor) external onlyOwner() {
         donor = _donor;
+    }
+
+    function setMaxOpenReviews(uint8 _maxOpenReviews) external onlyOwner() {
+        maxOpenReviews = _maxOpenReviews;
+    }
+
+    function setMaxOpenDonations(uint8 _maxOpenDonations) external onlyOwner() {
+        maxOpenDonations = _maxOpenDonations;
+    }
+
+    function hash(string memory s) private pure returns (bytes32) {
+        return keccak256(bytes(s));
     }
     
 }
