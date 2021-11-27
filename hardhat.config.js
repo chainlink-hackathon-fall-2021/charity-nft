@@ -32,7 +32,7 @@ module.exports = {
             // // If you want to do some forking, uncomment this
             forking: {
               url: MAINNET_RPC_URL,
-              blockNumber: 21809310
+              blockNumber: 21972240
             }
         },
         localhost: {
