@@ -19,7 +19,7 @@ const App = () => {
   return (
     <div>
         <BrowserRouter>
-          {/* <ParticlesBg color='#1a237e' type="cobweb" bg={true} />   */}
+          <ParticlesBg color='#1a237e' type="cobweb" bg={true} />  
           <Routes>
             <Route path='/campaignForm' element={<CampaignForm />} />
             <Route path='/campaignBoard' element={<CampaignBoard />} />

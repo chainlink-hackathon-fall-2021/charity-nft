@@ -43,7 +43,7 @@ const Dashboard = () => {
 						<div className="col s6">
 							<div className='row center'>
 								<h3 className="col s12" style={{color: 'white', fontSize: 70}} >$50,000</h3>
-								<p className="col s12" style={{color: 'white', fontSize: 20}}>Total Amount Doanted</p>
+								<p className="col s12" style={{color: 'white', fontSize: 20}}>Total Amount Donated</p>
 							</div>
 
 						</div>
