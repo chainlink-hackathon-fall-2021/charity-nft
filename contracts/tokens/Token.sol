@@ -13,10 +13,19 @@ import "./IToken.sol";
     function mintCampaign(
         address _to,
         uint256 _tokenId,
-        bytes memory /*_campaignHash*/
-    ) external override {
+        bytes32 /*_campaignHash*/,
+        uint256 _goal,
+        uint256 /*_startDate*/,
+        uint256 /*_endDate*/,
+        string memory /*_cid*/
+    ) public override {
         // @todo mint token using voteId
         tokens[_tokenId]=_to;
+        goals[_tokenId]=_goal;
+    }
+
+    function grantPoDRights(address[] memory /*_tos*/, uint256 /*_voteId*/, uint256 /*_campaignTokenId*/) public override {
+        // @todo grant pod rights
     }
     
     function getBeneficiary(uint256 _tokenId) public override view returns(address beneficiary) {
