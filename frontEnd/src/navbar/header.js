@@ -1,29 +1,32 @@
 import { Link, NavLink } from 'react-router-dom'
 import { useMoralis } from "react-moralis";
 
-const UserId = () => {
-	const { isAuthenticated, user } = useMoralis();
 
+const SignedInLinks = () => {
+	const { isAuthenticated, user, logout } = useMoralis();
+	
 	if (isAuthenticated) {
 		return (
 			<div>
-				<li><a href=""><i className="material-icons left">person_outline</i>{user.get('username')}</a></li>
-			</div>
-		)
-	}else {
-		return(
-			<div/>
-		)
-	}
-}
+				<ul id="nav-mobile" className="right hide-on-med-and-down">
 
-const RightSide = () => {
-	const { isAuthenticated, logout } = useMoralis();
-
-	if (isAuthenticated) {
-		return (
-			<div>
-				<NavLink to='/dashboard'> <li><a onClick={() => logout()} >Logout</a></li></NavLink>			
+					<li>
+						<NavLink to='/campaignform'>
+							<a className="waves-effect green btn">Create a Campaign<i className="material-icons right">group_work</i></a>	
+						</NavLink>
+					</li>	
+						
+					
+					<li>
+						<a style={{fontSize: 4}}  href=""><i className="material-icons left">person_outline</i>{user.get('username')}</a>
+					</li>
+					<li>
+						<NavLink to='/'> <li><a onClick={() => logout()} >Logout</a></li></NavLink>	
+					</li>
+					
+				</ul>
+				
+						
 			</div>
 		)
 	}else {
@@ -36,18 +39,14 @@ const RightSide = () => {
 
 const Header = () => {
 
-	const { logout } = useMoralis();
+	const { isAuthenticated } = useMoralis();
 
 	return (
 		<nav>
 			<div className="nav-wrapper black">
-			<a href="#" className="brand-logo center">ENDOW</a>
-			<ul className="left hide-on-med-and-down" id="nav-mobile" >
-				<UserId />
-			</ul>
-			<ul className="right">
-				<RightSide />
-			</ul>
+			<NavLink to='/'><a href="/" className="brand-logo left">ENDOW</a></NavLink>
+			{isAuthenticated? <SignedInLinks />: <div />}
+			
 			</div>
 		</nav>
 	)

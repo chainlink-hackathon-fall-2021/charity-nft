@@ -11,6 +11,8 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@walletconnect/web3-provider": "^1.6.6",
+    "lorem-ipsum": "^2.0.4",
+    "materialize-css": "^1.0.0-rc.2",
     "moralis": "^0.0.90",
     "particles-bg": "^2.5.5",
     "react": "^17.0.2",
@@ -19,6 +21,7 @@
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.3",
+    "react-simple-tabs-component": "^2.1.1",
     "redux": "^4.1.2",
     "styled-components": "^5.3.3",
     "web-vitals": "^1.0.1"

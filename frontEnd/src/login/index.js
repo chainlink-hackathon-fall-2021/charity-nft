@@ -14,11 +14,11 @@ const LoginForm = () => {
 		<div className="container" style={{paddingTop: 40}}>
 			<div className="card center black " style={{ borderRadius: 30 }}>
 				{/* <img src="./resources/images/metamask.png" /> */}
-				<img classname="responsive-img small" src={metaMaskLogo} width='25%' height='25%' />
+				<img className="responsive-img small" src={metaMaskLogo} width='25%' height='25%' />
 				<h1 style={{color: 'whitesmoke'}} > Connect with Metamask </h1>
 				<div style={{ paddingBottom: 30 }}>
 					<a onClick={() => authenticate({ signingMessage: "Hello World!" })}
-					   className="waves-effect waves-light btn"><i class="material-icons left">cloud</i>Connect</a>
+					   className="waves-effect waves-light btn"><i className="material-icons left">cloud</i>Connect</a>
 				</div>
 
 			</div>

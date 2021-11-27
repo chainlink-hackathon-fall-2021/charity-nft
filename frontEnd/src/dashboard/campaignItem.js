@@ -10,7 +10,7 @@ const CampaignItem = (prop) => {
         <li>
             <div className="row" style={{ borderBottom: '3px solid black' }}>
                 <div className="col s2" style={{padding: 10}}>
-                    <img classname="responsive-img small" src={shibaToken} width='100px' height='100px' />
+                    <img className="responsive-img small" src={shibaToken} width='100px' height='100px' />
                 </div>
                 <div className="col s8">
                     <div className="row">
