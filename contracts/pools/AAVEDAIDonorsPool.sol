@@ -58,7 +58,7 @@ contract AAVEDAIDonorsPool is Ownable, IDonor {
         donationPercentages[_msgSender()] = _donationPercentage;
         tvl = tvl.add(_amount); // track principal tvl
         tokenManager.mint(_msgSender(), 1);
-        // @todo mint share token
+        // @todo mint share token token
         // @todo add assertions
     }
     
@@ -111,18 +111,17 @@ contract AAVEDAIDonorsPool is Ownable, IDonor {
         uint256 earnings = getEarnings();
         uint256 donation = token.getGoalAmount(_tokenId);
         // only donate with earnings
+        // @todo optionaly donate only the yes voted ratio: yeah/votingPower=supportRatio
         if(donation>earnings){
             // donate half of earnings if there is not enough earnings to cover the goal
             donation = earnings.div(2);
         }
         aaveLendingPool.withdraw(
             address(dai),
-            donation, // @todo replace this with pool earnings, $1 sent for testing
+            donation,
             token.getBeneficiary(_tokenId)
         );
         tvd=tvd.add(donation);
-        // @todo grant rights to donors to receive PoD tokens
-        // @todo call chainlink oracle to get all indivual yea votes and grant PoD
     }
 
     function changeDonationPercentage(uint256 _donationPercentage) public {
