@@ -1,13 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { useMoralis, useMoralisFile } from "react-moralis";
+import { useMoralis, useMoralisFile, useMoralisWeb3Api,useWeb3ExecuteFunction } from "react-moralis";
 import Header from "../navbar/header";
 import { useNavigate, Navigate } from "react-router";
+import {abi as campaignLauncherAbi} from '../contracts/CampaignLauncher.json'
 
-
+const CAMPAIGN_LAUNCHER_CONTRACT_ADDRESS = '0xdf40fa55F4e41c43FE1dAcdf8Ab160D57eC83c8E'
 
 const CampaignForm = () => {
-
-	
 
 	const { user } = useMoralis();
 
@@ -22,6 +21,8 @@ const CampaignForm = () => {
 	const [currency,     updateCurrency] = useState('')
 	const [uploadedSucess, updateUploadSucess] = useState(false)
 
+	const [params, setParams] = useState({})
+
 	const navigate = useNavigate()
 
 	const {
@@ -31,6 +32,29 @@ const CampaignForm = () => {
 	  saveFile,
 	} = useMoralisFile();
 
+	const {isWeb3Enabled, enableWeb3, isWeb3EnableLoading} = useMoralis()
+	const { Web3API } = useMoralisWeb3Api()
+
+	useEffect(() => {
+		if (!isWeb3Enabled) {
+			if (!isWeb3EnableLoading) {
+				enableWeb3()
+			}
+		}
+	})
+
+	const { 
+		data: campaignSubmitData,
+		error: campaignSubmitError,
+		fetch: campaignSubmit,
+		isFetching: isCampaignSubmitFetching,
+		isLoading: isCampaignSubmitLoading, 
+	} = useWeb3ExecuteFunction({
+		abi: campaignLauncherAbi,
+		contractAddress: CAMPAIGN_LAUNCHER_CONTRACT_ADDRESS,
+		functionName: "submit",
+		params: params,
+	});
 
 	const saveToIPFS = async () => {
 
@@ -48,10 +72,24 @@ const CampaignForm = () => {
 			}
 		}
 
+		console.log(campaignNFTData)
+
 		
 		const file = {base64 : btoa(JSON.stringify(campaignNFTData))};
 		const savedFile = await saveFile('firstData.json', file, { saveIPFS: true})
 		const ipfsData = savedFile.toJSON()
+
+		const params = {
+			_campaignName: heading,
+			_goal: amount,
+			_startDate: new Date(startDate).getTime() / 1000 ,
+			_endDate: new Date(endDate).getTime() / 1000,
+			_cid: ipfsData.hash
+		}
+		console.log(params)
+
+		setParams(params)
+
 
 		updateSponsorName('')
 		updateSponsorEmail('')
@@ -69,31 +107,37 @@ const CampaignForm = () => {
 	}
 
 	
-	
-	useEffect(() => {
-		// if (uploadedSucess){
-		// 	navigate('/')
-		// }
+
+	console.log({
+		campaignSubmitData,
+		campaignSubmitError,
+		campaignSubmit,
+		isCampaignSubmitFetching,
+		isCampaignSubmitLoading, 
 	})
 	
 
 	return (
 		<div>
 			<Header />
+
 			<div className="container">
 				{
 					uploadedSucess? (
-						<div className="card center green accent-4" style={{padding: 10, borderRadius: 40}}  >
+						<div className="card center accent-4" style={{padding: 10, borderRadius: 40}}  >
 							
 							<h4>
 								<a onClick={() => updateUploadSucess(false)} className="btn-floating waves-effect waves-light red accent-4"><i class="material-icons">clear</i></a> 
 								Your Campaign Has been uploaded sucessfully</h4>
+								<span>txHash: {campaignSubmitData? campaignSubmitData.transactionHash : ''}</span>
 						</div>		
 					) : <div />
 				}
 
+				<h3 className='center'>Create a Campaign </h3>
+
 				<div className="card center whitesmoke" style={{paddingTop: '3%', paddingBottom: '3%', borderRadius: 40, border: '3px solid #1a237e'}}>
-					<h3>Create a Campaign </h3>
+					
 					<div className="row" style={{padding: 20, paddingLeft: 60, paddingRight: 60}}>
 
 						<div className="input-field col s6">
@@ -150,12 +194,17 @@ const CampaignForm = () => {
 						
 					</div>
 					<div className="center">
-						<h4>Account Detail: {user.attributes.ethAddress} </h4>
+						<h4>Donations Account: {user.attributes.ethAddress} </h4>
 					</div>
 
 					<div className='center' style={{paddingTop: 10}}>
-						<a onClick={() => saveToIPFS() }
-						className="waves-effect waves-light btn"><i className="material-icons left">cloud</i>Submit</a>
+						<button onClick={() => {
+							saveToIPFS() 
+							campaignSubmit()
+						}}
+						className="btn-large btn-base btn-large-override">
+							<i className="material-icons left">assignment_turned_in</i>Submit
+						</button>
 
 					</div>
 					

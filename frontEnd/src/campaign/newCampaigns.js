@@ -1,8 +1,11 @@
 import M from 'materialize-css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LoremIpsum } from "lorem-ipsum";
 
 import {useApps, useOrganization, useApp} from '@aragon/connect-react'
+import { useMoralis, useWeb3ExecuteFunction, useMoralisWeb3Api } from 'react-moralis';
+import {abi as AragonVotingAbi} from '../contracts/IVoting.json'
+
 
 const lorem = new LoremIpsum({
     sentencesPerParagraph: {
@@ -33,8 +36,34 @@ const DropDown = (props) => {
 const NewCampaignItem = (props) => {
 
     const [extended, setExtended] = useState(false)
-
     const {heading, timeleft} = props.data
+
+    const { isWeb3Enabled, isWeb3EnableLoading, enableWeb3 } = useMoralis()
+    const { Web3API } = useMoralisWeb3Api()
+    useEffect(() => {
+        if (!isWeb3Enabled) {
+            if (!isWeb3EnableLoading) {
+                enableWeb3()
+            }
+        }
+    })
+
+
+    const getVotingInfo = async () => {
+        const aragonVotingContractAddress = '0x2c2e5397F336C29a991E9E1759085F9940ACe347'
+        const options = {
+            chain: 'mumbai',
+            address: aragonVotingContractAddress,
+            function_name: 'getVote',
+            abi: AragonVotingAbi,
+            params: {_voteId: 54}
+        }
+        const result = await Web3API.native.runContractFunction(options)
+
+        console.log(result)
+    }
+    
+
 
     return (
         <li onClick={() => setExtended(!extended)}>
