@@ -1,8 +1,6 @@
 import M from 'materialize-css'
 import { useState, useEffect } from 'react';
 import { LoremIpsum } from "lorem-ipsum";
-
-import {useApps, useOrganization, useApp} from '@aragon/connect-react'
 import { useMoralis, useWeb3ExecuteFunction, useMoralisWeb3Api } from 'react-moralis';
 import {abi as AragonVotingAbi} from '../contracts/IVoting.json'
 
@@ -101,12 +99,6 @@ const NewCampaigns = () => {
         timeleft: '13'
 
     }
-
-    const [org, orgStatus] = useOrganization()
-    const [app, appStatus] = useApps()
-
-
-    
     
     return (
         <div>
