@@ -8,6 +8,7 @@ import "./IToken.sol";
  contract Token is IToken{
     
     mapping(uint256=>address) public tokens;
+    mapping(uint256=>uint256) public goals;
 
     // sample function called from dao after voting funding session
     function mintCampaign(
@@ -23,17 +24,13 @@ import "./IToken.sol";
         tokens[_tokenId]=_to;
         goals[_tokenId]=_goal;
     }
-
-    function grantPoDRights(address[] memory /*_tos*/, uint256 /*_voteId*/, uint256 /*_campaignTokenId*/) public override {
-        // @todo grant pod rights
-    }
     
     function getBeneficiary(uint256 _tokenId) public override view returns(address beneficiary) {
         beneficiary = tokens[_tokenId];
     }
 
-    function getGoalAmount(uint256 /*_tokenId*/) public override view returns(uint256) {
-        return 10**18;
+    function getGoalAmount(uint256 _tokenId) public override view returns(uint256) {
+        return goals[_tokenId];
     }
     
     function exists(uint256 _tokenId) external override view returns (bool) {
