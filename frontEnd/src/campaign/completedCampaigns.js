@@ -19,7 +19,7 @@ const DropDown = (props) => {
     const {description, donors, raised} = props.data
 
     return (
-        <div className='row'  style={{border: '2px solid black', borderTop: '0px'}}>
+        <div className='row'  style={{border: '2px solid #5e62d4', borderTop: '0px'}}>
 
             <div className='col s6'><span style={{fontWeight: 'bold', paddingBottom: '2px'}} >Total Donors: {donors}</span></div>
             <div className='col s6' style={{fontWeight: 'bold', paddingBottom: '2px'}}><span>Total raised: ${raised}</span></div>
@@ -42,7 +42,7 @@ const CompletedCampaignItem = (props) => {
 
     return (
         <li onClick={() => setExtended(!extended)}>
-            <div className='row' style={{padding: '10px', borderBottom: '1px solid black'}}>
+            <div className='row' style={{padding: '10px', borderBottom: '1px solid #5e62d4'}}>
                 
                 <div className='col s6 '>
                     
