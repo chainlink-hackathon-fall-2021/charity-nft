@@ -12,10 +12,19 @@ import CampaignBoard from "./campaign/campaignsBoard";
 import InvestmentProfile from "./invest";
 
 
+
+
 // className="grey lighten-3" style={{height: '100vh'}}
 
 const App = () => {
-  
+
+  const { web3, enableWeb3, isWeb3Enabled, isWeb3EnableLoading, web3EnableError } = useMoralis()
+
+  if (!isWeb3Enabled) {
+    enableWeb3({provider: 'walletconnect'})
+    return <div/>
+  }
+
   return (
     <div>
         <BrowserRouter>

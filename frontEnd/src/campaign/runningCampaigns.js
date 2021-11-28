@@ -1,6 +1,7 @@
 import M from 'materialize-css'
 import { useState } from 'react';
 import { LoremIpsum } from "lorem-ipsum";
+import { useMoralisWeb3Api, useMoralis } from 'react-moralis'
 
 const lorem = new LoremIpsum({
     sentencesPerParagraph: {
@@ -12,6 +13,21 @@ const lorem = new LoremIpsum({
       min: 4
     }
   });
+
+// Accept
+// const accept = async (abi, vote) => {
+//     const { Web3API } = useMoralisWeb3Api()
+
+//     const { Moralis } = useMoralis()
+
+//     Moralis.getChainId
+
+//     Web3API.native
+    
+// }
+
+
+//Reject
 
 
 const DropDown = (props) => {
@@ -33,6 +49,28 @@ const DropDown = (props) => {
 const RunningCampaignItem = (props) => {
 
     const [extended, setExtended] = useState(false)
+
+    const { isWeb3Enabled } = useMoralis()
+    const { Web3API } = useMoralisWeb3Api()
+
+    // enableWeb3()
+
+    const sendVote = async (vote) => {
+        if (isWeb3Enabled){
+
+            const ABI = []
+            
+            const options = {
+                chain: "bsc",
+                address: "0x...16",
+                function_name: "allowance",
+                abi: ABI,
+                params: {owner: "0x1...2", spender: "0x1...2"}
+            };
+            
+            const result = await Web3API.native.runContractFunction(options)
+        }
+    }
 
     const {heading, timeleft, votesRatio} = props.data
 
@@ -68,6 +106,9 @@ const RunningCampaignItem = (props) => {
     )
 }
 
+
+
+
 const RunningCampaigns = () => {
 
     const sampleData = {
@@ -77,6 +118,7 @@ const RunningCampaigns = () => {
         votesRatio: 46
 
     }
+
     
     return (
         <div>

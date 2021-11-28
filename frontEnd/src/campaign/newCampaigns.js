@@ -2,7 +2,6 @@ import M from 'materialize-css'
 import { useState } from 'react';
 import { LoremIpsum } from "lorem-ipsum";
 
-import {useApps, useOrganization, useApp} from '@aragon/connect-react'
 
 const lorem = new LoremIpsum({
     sentencesPerParagraph: {
@@ -64,6 +63,7 @@ const NewCampaignItem = (props) => {
     )
 }
 
+
 const NewCampaigns = () => {
 
     const sampleData = {
@@ -72,13 +72,7 @@ const NewCampaigns = () => {
         timeleft: '13'
 
     }
-
-    const [org, orgStatus] = useOrganization()
-    const [app, appStatus] = useApps()
-
-
-    
-    
+  
     return (
         <div>
             <ul className='grey lighten-4'>
