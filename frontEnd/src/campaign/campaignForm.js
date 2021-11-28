@@ -35,10 +35,10 @@ const CampaignForm = () => {
 	const saveToIPFS = async () => {
 
 		const campaignNFTData = {
+			name: heading,
 			description: description,
 			image: imgUrl,
-			name: heading,
-			attributes: {
+			properties: {
 				sponsorName,
 				sponsorEmail,
 				startDate,
@@ -48,6 +48,7 @@ const CampaignForm = () => {
 			}
 		}
 
+		
 		const file = {base64 : btoa(JSON.stringify(campaignNFTData))};
 		const savedFile = await saveFile('firstData.json', file, { saveIPFS: true})
 		const ipfsData = savedFile.toJSON()
