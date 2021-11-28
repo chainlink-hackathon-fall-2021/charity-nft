@@ -32,8 +32,11 @@ module.exports = {
             // // If you want to do some forking, uncomment this
             forking: {
               url: MAINNET_RPC_URL,
-              blockNumber: 21972240
-            }
+              blockNumber: 22017870
+            },
+            accounts: {
+                mnemonic: MNEMONIC,
+            },
         },
         localhost: {
         },
