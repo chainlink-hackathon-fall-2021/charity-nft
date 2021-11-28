@@ -66,13 +66,12 @@ contract AAVEDAIDonorsPool is Ownable, IDonor {
         require(deposits[_msgSender()] >= _amount, "You cannot withdraw more than deposited!");
         (, uint256 shareValue) = getShare();
         require(shareValue >= _amount, "Not enough funds");
-        uint256 withdrawalShare = _amount.div(deposits[_msgSender()]);
-        uint256 withdrawalShareValue = shareValue.mul(withdrawalShare);
-        uint256 donationAmount = shareValue.sub(deposits[_msgSender()]).mul(donationPercentages[_msgSender()]);
+        uint256 withdrawalShare = div(_amount,deposits[_msgSender()]);
+        uint256 withdrawalShareValue = ratio(withdrawalShare,shareValue);
+        uint256 donationAmount = ratio(donationPercentages[_msgSender()],shareValue.sub(deposits[_msgSender()]));
         uint256 withdrawalAmount = withdrawalShareValue.sub(donationAmount);
         deposits[_msgSender()] = deposits[_msgSender()].sub(_amount);
         tvl = tvl.sub(_amount);
-
         aaveLendingPool.withdraw(
             address(dai),
             withdrawalAmount,
@@ -89,10 +88,9 @@ contract AAVEDAIDonorsPool is Ownable, IDonor {
         require(deposits[_msgSender()] > 0, "Not enough funds");
         (, uint256 shareValue) = getShare();
         tvl = tvl.sub(deposits[_msgSender()]);
-        uint256 donationAmount = shareValue.sub(deposits[_msgSender()]).mul(donationPercentages[_msgSender()]);
+        uint256 donationAmount = ratio(donationPercentages[_msgSender()],shareValue.sub(deposits[_msgSender()]));
         uint256 withdrawalAmount = shareValue.sub(donationAmount);
         deposits[_msgSender()] = 0;
-        
         aaveLendingPool.withdraw(
             address(dai),
             withdrawalAmount,
@@ -140,11 +138,19 @@ contract AAVEDAIDonorsPool is Ownable, IDonor {
 
     function _getShareOf(address _user) private view returns (uint256 share, uint256 shareValue){
         uint256 poolBalance = aToken.balanceOf(address(this));
-        (, share) = deposits[_user].tryDiv(tvl);
-        (, shareValue) = poolBalance.tryMul(share);
+        share = div(deposits[_user],tvl);
+        shareValue = ratio(share,poolBalance);
     }
 
     function setTokenInterface(IToken _token) external onlyOwner() {
         token = _token;
+    }
+
+    function div(uint a, uint b) internal pure returns (uint c) {
+        (,c) = a.mul(10**18).add(b.div(2)).tryDiv(b);
+    }
+
+    function ratio(uint a, uint b) internal pure returns (uint c) {
+        (,c) = a.mul(b).tryDiv(10**18);
     }
 }
