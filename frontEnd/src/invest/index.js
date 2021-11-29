@@ -143,12 +143,6 @@ const Pools = (props) => {
     isDaiDepositFetching,
     isDepositDaiLoading,
   });
-  console.log({
-    approveData,
-    depositDaiError,
-    isapproveFetching,
-    isApproveLoading,
-  });
   return (
     <div className="card" style={{ padding: "2%", borderRadius: 25 }}>
       <div class="card-content">
@@ -325,91 +319,6 @@ const Pools = (props) => {
     </div>
   );
 };
-
-const Tokens = (props) => {
-  return (
-    <div className="row center">
-      <div
-        className="col s2 red"
-        style={{ height: "100px", width: "100px", border: "1px solid black" }}
-      >
-        {" "}
-        1
-      </div>
-      <div
-        className="col s2 red"
-        style={{ height: "100px", width: "100px", border: "1px solid black" }}
-      >
-        {" "}
-        2
-      </div>
-      <div
-        className="col s2 red"
-        style={{ height: "100px", width: "100px", border: "1px solid black" }}
-      >
-        {" "}
-        3
-      </div>
-      <div
-        className="col s2 red"
-        style={{ height: "100px", width: "100px", border: "1px solid black" }}
-      >
-        {" "}
-        4
-      </div>
-      <div
-        className="col s2 red"
-        style={{ height: "100px", width: "100px", border: "1px solid black" }}
-      >
-        {" "}
-        5
-      </div>
-      <div
-        className="col s2 red"
-        style={{ height: "100px", width: "100px", border: "1px solid black" }}
-      >
-        {" "}
-        6
-      </div>
-      <div
-        className="col s2 red"
-        style={{ height: "100px", width: "100px", border: "1px solid black" }}
-      >
-        {" "}
-        7
-      </div>
-      <div
-        className="col s2 red"
-        style={{ height: "100px", width: "100px", border: "1px solid black" }}
-      >
-        {" "}
-        8
-      </div>
-      <div
-        className="col s2 red"
-        style={{ height: "100px", width: "100px", border: "1px solid black" }}
-      >
-        {" "}
-        9
-      </div>
-      <div
-        className="col s2 red"
-        style={{ height: "100px", width: "100px", border: "1px solid black" }}
-      >
-        {" "}
-        10
-      </div>
-      <div
-        className="col s2 red"
-        style={{ height: "100px", width: "100px", border: "1px solid black" }}
-      >
-        {" "}
-        11
-      </div>
-    </div>
-  );
-};
-
 const InvestmentProfile = () => {
   return (
     <div>

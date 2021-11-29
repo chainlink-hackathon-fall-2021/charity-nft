@@ -18,6 +18,24 @@
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+      window.addEventListener("DOMContentLoaded", event => {
+        const options = {
+          duration: 300,
+          onShow: null,
+          swipeable: false,
+          responsiveThreshold: Infinity
+        };
+      
+        const tabsContainer = document.querySelector(".tabs");
+        M.Tabs.init(tabsContainer, options);
+      });
+        </script>
+          <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+              var instances = M.AutoInit();
+              });
+          </script>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,8 +50,4 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root" class="bg-img"></div>
   </body>
-  <script>
-    var el = document.querySelector('.tabs');
-    var instance = M.Tabs.init(el, {});
-  </script>
 </html>

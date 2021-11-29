@@ -10,6 +10,7 @@ import CampaignForm from "./campaign/campaignForm";
 import { Main } from "@aragon/ui";
 import CampaignBoard from "./campaign/campaignsBoard";
 import InvestmentProfile from "./invest";
+import Wallet from "./wallet/wallet";
 
 // className="grey lighten-3" style={{height: '100vh'}}
 
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/campaignForm" element={<CampaignForm />} />
           <Route path="/campaignBoard" element={<CampaignBoard />} />
           <Route path="/investmentProfile" element={<InvestmentProfile />} />
+          <Route path="/wallet" element={<Wallet />} />
           <Route exact path="/" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
