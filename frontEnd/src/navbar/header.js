@@ -102,14 +102,16 @@ const Header = () => {
                 Campaigns
               </h5>
             </NavLink>
-            <h5
-              className="text-color-main inline-block text-bold"
-              style={{
-                margin: "10px 20px",
-              }}
-            >
-              Wallet
-            </h5>
+            <NavLink to="/wallet">
+              <h5
+                className="text-color-main inline-block text-bold"
+                style={{
+                  margin: "10px 20px",
+                }}
+              >
+                PoD
+              </h5>
+            </NavLink>
           </a>
         </NavLink>
         {isAuthenticated ? <SignedInLinks /> : <div />}
