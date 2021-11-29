@@ -119,25 +119,25 @@ const Dashboard = () => {
     if (!isDepositLoading && deposit) {
       setStats((stats) => ({
         ...stats,
-        deposit,
+        deposit: deposit / 10 ** 18,
       }));
     }
     if (!isTvdLoading && tvd) {
       setStats((stats) => ({
         ...stats,
-        tvd,
+        tvd: tvd / 10 ** 18,
       }));
     }
     if (!isTvlLoading && tvl) {
       setStats((stats) => ({
         ...stats,
-        tvl,
+        tvl: tvl / 10 ** 18,
       }));
     }
     if (!isEarningLoading && earning) {
       setStats((stats) => ({
         ...stats,
-        earning,
+        earning: earning / 10 ** 18,
       }));
     }
     if (!isShareLoading && share) {

@@ -1,6 +1,10 @@
 {
 	"abi": [{
-			"inputs": [],
+			"inputs": [{
+				"internalType": "contract IToken",
+				"name": "_token",
+				"type": "address"
+			}],
 			"stateMutability": "nonpayable",
 			"type": "constructor"
 		},
@@ -21,6 +25,17 @@
 			],
 			"name": "OwnershipTransferred",
 			"type": "event"
+		},
+		{
+			"inputs": [],
+			"name": "MAX_DONATION_PERCENTAGE",
+			"outputs": [{
+				"internalType": "uint64",
+				"name": "",
+				"type": "uint64"
+			}],
+			"stateMutability": "view",
+			"type": "function"
 		},
 		{
 			"inputs": [],
@@ -45,6 +60,17 @@
 			"type": "function"
 		},
 		{
+			"inputs": [{
+				"internalType": "uint256",
+				"name": "_donationPercentage",
+				"type": "uint256"
+			}],
+			"name": "changeDonationPercentage",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
 			"inputs": [],
 			"name": "dai",
 			"outputs": [{
@@ -57,10 +83,16 @@
 		},
 		{
 			"inputs": [{
-				"internalType": "uint256",
-				"name": "_amount",
-				"type": "uint256"
-			}],
+					"internalType": "uint256",
+					"name": "_amount",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_donationPercentage",
+					"type": "uint256"
+				}
+			],
 			"name": "deposit",
 			"outputs": [],
 			"stateMutability": "nonpayable",
@@ -73,6 +105,47 @@
 				"type": "address"
 			}],
 			"name": "deposits",
+			"outputs": [{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			}],
+			"name": "donate",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}],
+			"name": "donated",
+			"outputs": [{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}],
+			"name": "donationPercentages",
 			"outputs": [{
 				"internalType": "uint256",
 				"name": "",
@@ -129,6 +202,28 @@
 		},
 		{
 			"inputs": [{
+				"internalType": "contract IToken",
+				"name": "_token",
+				"type": "address"
+			}],
+			"name": "setTokenInterface",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "token",
+			"outputs": [{
+				"internalType": "contract IToken",
+				"name": "",
+				"type": "address"
+			}],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [{
 				"internalType": "address",
 				"name": "newOwner",
 				"type": "address"
@@ -167,6 +262,13 @@
 				"type": "uint256"
 			}],
 			"name": "withdraw",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "withdrawAll",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"
