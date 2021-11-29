@@ -1,6 +1,71 @@
 # Endow
 
-Polygon Mumbai Testnet Addresses
+EnDow is an application developed by the following team🥇 as a submission to the 
+
+Abdul Wasay Mehar - github: @masterrom 
+Francisco Angulo D - github: @ttymarucr
+David Krett - github: @eydbk
+Anand Singh - github: @darknightdev
+
+## Problem Being Addressed
+
+- The problem our application addresses, is it provides a easy and UX friendly way for Crypto Hodlers to "stake" there investments and use the rewards generated via yield farming amongst selected low risk lending products
+
+Endow - Is a DeFi proof of donation investment product (nfts) targeted towards HODLERS who want to share their investment rewards from yield farming with community selected (DAO voting) charitable campaigns.
+
+## Inspiration
+- our inspiration for this project are the many crypto investors who are HODLERS - our project gives the opportunity for these Hodlers to share yield opportunies by investing in low risk lending protocols and allocating rewards owned to socially beneficial campaigns as donations
+
+## What it does
+
+- investors can invest their crypto holding in Endow
+- investors investments are invested in a lending product (currently DAI - more to be added later) 
+- investors are issued Endow governance tokens for their investment - in future we will also issue share tokens to provide liquidity
+- these investments are invested in AAVE via Endow's governance DAO (Aragon)
+- Campaigner can post a socially beneficial campaign for donations on Endow - when they post their campaign they are issued with an NFT
+- Investors vote via the DAO as to which Campaigns can elegible for donations from earnings on the investment pool
+- During a predesignated voting periods - investors can use their governance tokens to selectively allocate their rewards for donation to the elegible campaigns in the donors pool
+- At the end of each voting period the investors rewards and donations are recalculated - the investor receives a Proof of Donation ERC 1155 NFT issued by each campaign they have donated to as an official receipt for their donations
+
+## How we built it
+
+- hardhat chainlink starter
+- solidity smart contracts
+- react UI
+- Aragon Dao
+- Aave
+- Moralis
+- Alchemy
+- Polygon
+- Chainlink Keepers
+- ERC1155 @openzeppelin 
+
+## Challenges we ran into
+- time we all have full time jobs
+## Accomplishments that we're proud of
+- how we were able to integrate modular components ie chainlink, openzepplin, aragon dao, aave into an easy to use investment protocol
+- issuing nfts to represent each campaign and erc1155 Proof of Donation tokens
+
+## What we learned
+- DAO protocols, Ave
+## What's next for Endow
+- further development including share tokens, security review 
+- deployment of UI to IPFS
+- additional investment protocols
+
+## Smart Contracts
+To facilitate our application several smart contracts were developed - as follows
+
+- ITokenManager.sol - manages governance token issuance and burning with the Aragon Smart Contract
+- IVoting.sol - manages voting for elegible campaigns and for selecting for each investor supported campaigns
+- CampaignLauncher.sol - manages the workflow for a campaigner to submit, obtain approval and donations for each campaign - this contract also manages the issuance of NFTS for campaigns as well as NFTS for proof of donation by calling the EndowTokenManager.sol contract
+- CampaignVotingManager.sol - manages the submission of campaigns for voting
+- CampaignDonationKeeper.sol - A keeper is used to get the donation votes for each campaign
+- CampaignReviewKeeper.sol - A keeper that manages the approval vote for any newly submitted campaigns
+- AAVEDAIDDonorsPool.sol - A contract for managing investors investments into the investment/donation pool
+- IDonor.sol - interface to track donations
+  
+## Polygon Mumbai Testnet Addresses
 
 | Contract               | Address                                    | Description                                                  |
 | ---------------------- | ------------------------------------------ | ------------------------------------------------------------ |
@@ -15,8 +80,8 @@ Polygon Mumbai Testnet Addresses
 
 ## Sequence Diagram
 
-![Campaigns](/svg/TLJ1Zjem4BtdAqQBzeIYQjNsWaIr0POMgLrGMQrQjJqOUnOi73kr7IX_l-EGs05jBn1DthptPfwTU-UPzNMfOChAYicjTfcNNY4yQ66EC5Vcw227BwogJh1YVfUvlTGLiwm4vwtaJREtDVPUhF5lZPhZDtIERR5Gn5kYzi3f1sqFQT5LHhiEEK7IAwmbvOQISMzij8OM1bkBgDlwGX_GXOU1HP5jp3-ucIZ3ztp7f8PrIPF1r6Xl2UvkOF1LRdT-eeXtOsejc3tHb3FIOWwAgW9Z1KdSPG1aK_eJp8fbMtoVYaNn_D1MFsIe1P1mDXv7DwvzehzsYUDn5gtcdngfuH167MvMBE2tXfdHp2Fyk0Np0j_noAnmxtvAL28B7TGOx0o7gO_9B9G2PV1qyQAfv6rJdjFB5Jj1GmTB7JIxtcGjeCuB-MmEQ3MZ2E79x94EHMCX3tC-uZ4c4cQnvi1KcB4NK_xh7DIVthGNVUjwKqhdfD5dveG_3qduIFriVB011UTO-RFjX8_scwOeiAnGmvpA7KqlWajpervoGSebhKItQFCXmmvMngYtR8_Wuzqj_9-4IathrGI1wNe_Z_EdQuN-UlEty9HDoaK859qWtTyuV3ItHeKycMjgSxeLbEJuObSRnVW-JhY0GuZ36tW9OBz3Xy3ZjwCTxR9doXIlLJZSxR66Gj4zRROP3ZjjbgGQfzS4lQ5JJYcAQtX4z4x2oimSb98-F2BBxkd2qWVh5G00 "Campaigns")
 
+![Sequence Diagram](https://github.com/chainlink-hackathon-fall-2021/charity-nft/blob/016a9c7dccaab878e1344199c24676514590015e/docs/diagrams/Campaigns.png)
 
-![Campaigns](/png/TLJ1Zjem4BtdAqQBzeIYQjNsWaIr0POMgLrGMQrQjJqOUnOi73kr7IX_l-EGs05jBn1DthptPfwTU-UPzNMfOChAYicjTfcNNY4yQ66EC5Vcw227BwogJh1YVfUvlTGLiwm4vwtaJREtDVPUhF5lZPhZDtIERR5Gn5kYzi3f1sqFQT5LHhiEEK7IAwmbvOQISMzij8OM1bkBgDlwGX_GXOU1HP5jp3-ucIZ3ztp7f8PrIPF1r6Xl2UvkOF1LRdT-eeXtOsejc3tHb3FIOWwAgW9Z1KdSPG1aK_eJp8fbMtoVYaNn_D1MFsIe1P1mDXv7DwvzehzsYUDn5gtcdngfuH167MvMBE2tXfdHp2Fyk0Np0j_noAnmxtvAL28B7TGOx0o7gO_9B9G2PV1qyQAfv6rJdjFB5Jj1GmTB7JIxtcGjeCuB-MmEQ3MZ2E79x94EHMCX3tC-uZ4c4cQnvi1KcB4NK_xh7DIVthGNVUjwKqhdfD5dveG_3qduIFriVB011UTO-RFjX8_scwOeiAnGmvpA7KqlWajpervoGSebhKItQFCXmmvMngYtR8_Wuzqj_9-4IathrGI1wNe_Z_EdQuN-UlEty9HDoaK859qWtTyuV3ItHeKycMjgSxeLbEJuObSRnVW-JhY0GuZ36tW9OBz3Xy3ZjwCTxR9doXIlLJZSxR66Gj4zRROP3ZjjbgGQfzS4lQ5JJYcAQtX4z4x2oimSb98-F2BBxkd2qWVh5G00 "Campaigns")
-
+## WhiteBoard Mockups
+- please see docs folder
