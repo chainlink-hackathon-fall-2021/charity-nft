@@ -103,7 +103,7 @@ contract CampaignLauncher is Ownable {
     // @todo add reentrancy check
     // user calls the submit to cast newly created vote
     function submit(string calldata _campaignName, uint256 _goal, uint256 _startDate, uint256 _endDate, string memory _cid) external{
-        bytes32 hash = hash(_campaignName);
+        bytes32 hash = gethash(_campaignName);
         require(campaigns[hash]==0, "Campaign already exists");
         uint256 voteId = voting.newVote(abi.encodePacked(uint32(1)), _campaignName);
         token.mintCampaign(
@@ -211,7 +211,7 @@ contract CampaignLauncher is Ownable {
         maxOpenDonations = _maxOpenDonations;
     }
 
-    function hash(string memory s) private pure returns (bytes32) {
+    function gethash(string memory s) private pure returns (bytes32) {
         return keccak256(bytes(s));
     }
     
