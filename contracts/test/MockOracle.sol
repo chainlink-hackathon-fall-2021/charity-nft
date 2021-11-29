@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.6;
 
-import "@chainlink/contracts/src/v0.6/LinkTokenReceiver.sol";
-import "@chainlink/contracts/src/v0.6/interfaces/ChainlinkRequestInterface.sol";
-import "@chainlink/contracts/src/v0.6/interfaces/LinkTokenInterface.sol";
-import "@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol";
+import '@chainlink/contracts/src/v0.6/LinkTokenReceiver.sol';
+import '@chainlink/contracts/src/v0.6/interfaces/ChainlinkRequestInterface.sol';
+import '@chainlink/contracts/src/v0.6/interfaces/LinkTokenInterface.sol';
+import '@chainlink/contracts/src/v0.6/vendor/SafeMathChainlink.sol';
 
 /**
  * @title The Chainlink Mock Oracle contract
@@ -131,7 +131,7 @@ contract MockOracle is ChainlinkRequestInterface, LinkTokenReceiver {
     ) external override {
         require(commitments[_requestId].callbackAddr != address(0), "Must use a unique ID");
         // solhint-disable-next-line not-rely-on-time
-        require(_expiration <= now, "Request is not expired");
+        require(_expiration <= now, 'Request is not expired');
 
         delete commitments[_requestId];
         emit CancelOracleRequest(_requestId);
@@ -164,7 +164,7 @@ contract MockOracle is ChainlinkRequestInterface, LinkTokenReceiver {
      * @param _to The callback address
      */
     modifier checkCallbackAddress(address _to) {
-        require(_to != address(LinkToken), "Cannot callback to LINK");
+        require(_to != address(LinkToken), 'Cannot callback to LINK');
         _;
     }
 }

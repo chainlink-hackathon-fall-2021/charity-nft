@@ -45,7 +45,7 @@ contract AAVEDAIDonorsPool is Ownable, IDonor {
     function deposit(uint256 _amount, uint256 _donationPercentage) external {
         require(_donationPercentage <= MAX_DONATION_PERCENTAGE, "Invalid donation percentage");
         // send dai from user to this contract
-        require(dai.transferFrom(_msgSender(), address(this), _amount), "DAI transfer failed!");
+        require(dai.transferFrom(_msgSender(), address(this), _amount), 'DAI transfer failed!');
         // then deposit to aave
         aaveLendingPool.deposit(address(dai), _amount, address(this), 0);
         deposits[_msgSender()] = deposits[_msgSender()].add(_amount);
@@ -57,7 +57,7 @@ contract AAVEDAIDonorsPool is Ownable, IDonor {
     }
 
     function withdraw(uint256 _amount) external {
-        require(deposits[_msgSender()] >= _amount, "You cannot withdraw more than deposited!");
+        require(deposits[_msgSender()] >= _amount, 'You cannot withdraw more than deposited!');
         (, uint256 shareValue) = getShare();
         require(shareValue >= _amount, "Not enough funds");
         uint256 withdrawalShare = div(_amount, deposits[_msgSender()]);
