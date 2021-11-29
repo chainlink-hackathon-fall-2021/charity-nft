@@ -20,7 +20,13 @@ const lorem = new LoremIpsum({
 const DropDown = (props) => {
     const {description} = props.data
     return (
-        <div className='row'  style={{border: '2px solid black', borderTop: '0px'}}>
+        <div className='row'  style={{border: '2px solid #5e62d4', borderTop: '0px'}}>
+
+            <img className='left' 
+            width='400px'
+            height='250px'
+            style={{ padding: '30px'}}
+            src='https://assets.rappler.co/612F469A6EA84F6BAE882D2B94A4B421/img/0192FDD410A74678914FC59525EB602B/campaign-explainer.jpg' />
 
             <span className='col s12' style={{textAlign: 'left'}} >{description}</span>
             
@@ -48,26 +54,31 @@ const NewCampaignItem = (props) => {
 
 
     return (
-        <li onClick={() => setExtended(!extended)}>
-            <div className='row' style={{padding: '10px', borderBottom: '1px solid black'}}>
-                
-                <div className='col s6 '>
-                    
-                    <span style={{float: 'left', fontSize: extended? '30px': '' }} >{heading}</span>
-                    
+        <li>
+            <div className='row' style={{padding: '10px', borderBottom: '1px solid #5e62d4'}}>
+                <div onClick={() => setExtended(!extended)} style={{cursor: 'pointer'}} >
+
+                    <div className='col s6 '>
+                        
+                        <span style={{float: 'left', fontSize: extended? '30px': '' }} >{heading}</span>
+                        
+                    </div>
+
+                    <div className='col s2 '>
+                        <span style={{float: 'right'}} >{timeleft} hr</span>
+                    </div>
+
                 </div>
 
-                <div className='col s2 '>
-                    <span style={{float: 'right'}} >{timeleft} hr</span>
+
+
+                <div className='col s2 green' style={{borderRadius: 5, cursor: 'pointer'}} onClick={() => console.log('Approve')}>
+                    <span style={{color: 'white'}}>Approve</span>                    				
                 </div>
 
-                <div className='col s2 green' style={{borderRadius: 25, cursor: 'pointer'}} onClick={() => console.log('Approve')}>
-                    <span>Approve</span>                    				
-                </div>
-
-                <div className='col s2 red' style={{borderRadius: 25, cursor: 'pointer'}} onClick={() => console.log('Reject')}>
-                    <span>Reject</span>                    				
-                </div>   
+                <div className='col s2 red' style={{borderRadius: 5, cursor: 'pointer'}} onClick={() => console.log('Reject')}>
+                    <span style={{color: 'white'}}>Reject</span>                    				
+                </div> 
                             
             </div>
             {extended? <DropDown data={props.data} /> : <div />}
