@@ -1,37 +1,34 @@
 @startuml Campaigns
-title Endow Flows Happy Path
+title Endow Flows - Happy Path
 skinparam strictuml true
 skinparam SequenceMessageAlignment center
 skinparam responseMessageBelowArrow true
-actor Campaigner #Pink
-actor Investor #Green
+actor Campaigner #green
+actor Investor #red
+box "Blockchain Smart Contracts" #LightBlue
 boundary EnDow as App order 1
-entity DAO order 2
-database Blockchain order 3
+  entity DAO order 3
+  entity AAVE order 4
+end box
 == Investors Invest In Endow ==
-Investor -> App : Invest DAI 
-App -> DAO : Issue EnDow Tokens
-DAO -> Blockchain : Mint EnDow Tokens
-Blockchain -> Investor : Endow Tokens
+Investor -> App ++ : Invest DAI \n Donate X% of Rewards/Yield
+App -> DAO ++: Invest Dai
+DAO -> AAVE : Invest Dai
+AAVE --> DAO -- : Pay Yield On DAI
+DAO -> Investor -- : EnDow Governance Tokens
+App --
 == New Campaign Approval ==
 Campaigner -[#green]> App ++ : New Campaign Submission
-App -[#green]> DAO ++ : Conduct New Approval Vote
-DAO -[#green]> Blockchain ++ : Mint New Campaign NFT
-Blockchain -[#green]> Campaigner ++ : New Campaign NFT
-
+App -[#green]> DAO ++ : Approval Vote To Accept
 DAO -[#green]> Investor ++ : Campaign Open For Approval
-Investor -[#green]> App ++ : Investor Votes
-App -[#green]> DAO : Investor Votes
-DAO -[#green]> Blockchain : Mint Campaign NFT 
-Blockchain -[#green]> Campaigner : Campaign NFT minted
-Blockchain -[#green]> Investor : Campaign Open For Donations
+Investor -[#green]> App : Investors Votes To Accept Campaign In Donations Pool
+App -[#green]> DAO : 51%  Votes To Accept Campaign To Pool
+DAO -[#green]> App  : New Campaign NFT
+App -[#green]> Campaigner -- : New Campaign NFT
+== Campaign Added To Pool - Investor Votes To Select Campaigns To Fund ===
+Investor -[#black]> DAO : I vote to fund these campaigns
+DAO -[#black]> DAO : Calculate Rewards Allocation of Donor Pool 
+DAO -[#black]> Campaigner : Investor Donations
+DAO -[#black]> Investor : Campaign PoDs minted
 
-== Campaign Added To Pool ==
-
-group Step: DAO Added To Pool - Open For Donations
-  DAO -> App : Campaign Added to Pool
-  DAO -> Investor : Vote to Donate   
-  Investor -> Investor : Review/\nVote
-
-end group
 @enduml
