@@ -47,22 +47,6 @@ const NewCampaignItem = (props) => {
     })
 
 
-    const getVotingInfo = async () => {
-        const aragonVotingContractAddress = '0x2c2e5397F336C29a991E9E1759085F9940ACe347'
-        const options = {
-            chain: 'mumbai',
-            address: aragonVotingContractAddress,
-            function_name: 'getVote',
-            abi: AragonVotingAbi,
-            params: {_voteId: 54}
-        }
-        const result = await Web3API.native.runContractFunction(options)
-
-        console.log(result)
-    }
-    
-
-
     return (
         <li onClick={() => setExtended(!extended)}>
             <div className='row' style={{padding: '10px', borderBottom: '1px solid black'}}>
