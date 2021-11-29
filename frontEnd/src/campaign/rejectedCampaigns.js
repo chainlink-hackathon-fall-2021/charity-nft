@@ -19,6 +19,13 @@ const DropDown = (props) => {
 
     return (
         <div className='row'  style={{border: '2px solid #5e62d4', borderTop: '0px'}}>
+
+            <img className='left' 
+                width='400px'
+                height='250px'
+                style={{ padding: '30px'}}
+                src='https://assets.rappler.co/612F469A6EA84F6BAE882D2B94A4B421/img/0192FDD410A74678914FC59525EB602B/campaign-explainer.jpg' 
+            />
             
             <span className='col s12' style={{textAlign: 'left', color: 'red', fontWeight: 'bold', paddingBottom: '3px'}}>{rejectionReason}</span>
             
@@ -37,13 +44,11 @@ const RejectedCampaignItem = (props) => {
     const { heading } = props.data
 
     return (
-        <li onClick={() => setExtended(!extended)}>
+        <li onClick={() => setExtended(!extended)} style={{cursor: 'pointer'}}>
             <div className='row' style={{padding: '10px', borderBottom: '1px solid #5e62d4'}}>
-                
+            
                 <div className='col s6 '>
-                    
                     <span style={{float: 'left', fontSize: extended? '30px': '' }} >{heading}</span>
-                    
                 </div>
 
                 <div className='col s4 '>

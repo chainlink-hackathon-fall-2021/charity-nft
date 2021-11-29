@@ -19,15 +19,29 @@ const DropDown = (props) => {
     const {description, donors, raised} = props.data
 
     return (
-        <div className='row'  style={{border: '2px solid #5e62d4', borderTop: '0px'}}>
 
-            <div className='col s6'><span style={{fontWeight: 'bold', paddingBottom: '2px'}} >Total Donors: {donors}</span></div>
-            <div className='col s6' style={{fontWeight: 'bold', paddingBottom: '2px'}}><span>Total raised: ${raised}</span></div>
-                    
+        <div className='row' style={{border: '2px solid #5e62d4', borderTop: '0px'}}>
+
+            <img className='left' 
+                width='400px'
+                height='250px'
+                style={{ padding: '30px'}}
+                src='https://assets.rappler.co/612F469A6EA84F6BAE882D2B94A4B421/img/0192FDD410A74678914FC59525EB602B/campaign-explainer.jpg' 
+            />
+           
+            <div className='col s12' style={{fontWeight: 'bold', paddingBottom: '2px', textAlign: 'left'}}>
+                <span>Total Donors: {donors}</span>
+            </div>
+            <div className='col s12' style={{fontWeight: 'bold', paddingBottom: '2px', textAlign: 'left'}}>
+                <span>Total raised: ${raised}</span>
+            </div>
+            
 
             <span className='col s12' style={{textAlign: 'left'}} >{description}</span>
             
             <span className='col s12' style={{textAlign: 'left', paddingTop: '10px'}} >KYC Information</span>
+            
+    
 
         </div>
     )
@@ -41,7 +55,7 @@ const CompletedCampaignItem = (props) => {
     const {heading, raised} = props.data
 
     return (
-        <li onClick={() => setExtended(!extended)}>
+        <li onClick={() => setExtended(!extended)} style={{cursor: 'pointer'}}>
             <div className='row' style={{padding: '10px', borderBottom: '1px solid #5e62d4'}}>
                 
                 <div className='col s6 '>
