@@ -1,8 +1,9 @@
 import M from 'materialize-css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LoremIpsum } from "lorem-ipsum";
+import { useMoralis, useWeb3ExecuteFunction, useMoralisWeb3Api } from 'react-moralis';
+import {abi as AragonVotingAbi} from '../contracts/IVoting.json'
 
-import {useApps, useOrganization, useApp} from '@aragon/connect-react'
 
 const lorem = new LoremIpsum({
     sentencesPerParagraph: {
@@ -33,8 +34,18 @@ const DropDown = (props) => {
 const NewCampaignItem = (props) => {
 
     const [extended, setExtended] = useState(false)
-
     const {heading, timeleft} = props.data
+
+    const { isWeb3Enabled, isWeb3EnableLoading, enableWeb3 } = useMoralis()
+    const { Web3API } = useMoralisWeb3Api()
+    useEffect(() => {
+        if (!isWeb3Enabled) {
+            if (!isWeb3EnableLoading) {
+                enableWeb3()
+            }
+        }
+    })
+
 
     return (
         <li onClick={() => setExtended(!extended)}>
@@ -72,12 +83,6 @@ const NewCampaigns = () => {
         timeleft: '13'
 
     }
-
-    const [org, orgStatus] = useOrganization()
-    const [app, appStatus] = useApps()
-
-
-    
     
     return (
         <div>
