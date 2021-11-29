@@ -194,7 +194,7 @@ const Pools = (props) => {
             className="col s5 center right"
             style={{ height: "50%", fontSize: "50px" }}
           >
-            12% APR
+            3.6% APY
           </span>
         </div>{" "}
       </div>

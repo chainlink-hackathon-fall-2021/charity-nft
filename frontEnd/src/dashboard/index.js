@@ -114,7 +114,6 @@ const Dashboard = () => {
       asset: window.config.DAI_ADDRESS,
     },
   });
-  console.log(share);
   useEffect(() => {
     if (!isDepositLoading && deposit) {
       setStats((stats) => ({
@@ -297,7 +296,7 @@ const Dashboard = () => {
                 </p>
                 <h5>APR</h5>
                 <h5>
-                  ({stats.depositAPY && stats.depositAPY.toFixed(2)}% APY)
+                  ({stats.depositAPY && 3.6}% APY)
                   {/* {stats.depositAPY}% APY */}
                 </h5>
                 <h6 className="table">
