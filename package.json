@@ -7,8 +7,7 @@
     "test-integration": "hardhat test test/integration/APIConsumer_int_test.js --network kovan && hardhat test test/integration/RandomNumberConsumer_int_test.js --network kovan",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "solhint": "./node_modules/.bin/solhint -f table contracts/**/*.sol",
-    "format": "./node_modules/.bin/prettier --write contracts/**/*.sol"
+    "prettier": "prettier --write 'contracts/**/*.sol'"
   },
   "license": "MIT",
   "devDependencies": {
@@ -21,13 +20,12 @@
     "chai-bignumber": "^3.0.0",
     "chai-bn": "^0.2.1",
     "ethereum-waffle": "^3.2.1",
+    "ethereumjs-abi": "^0.6.8",
     "ethers": "^5.0.24",
     "hardhat": "^2.6.4",
     "hardhat-deploy": "^0.7.0-beta.39",
-    "prettier": "^2.4.1",
-    "prettier-plugin-solidity": "^1.0.0-beta.19",
-    "solhint": "^2.3.1",
-    "solhint-plugin-prettier": "^0.0.5"
+    "prettier": "^2.5.0",
+    "prettier-plugin-solidity": "^1.0.0-beta.19"
   },
   "dependencies": {
     "@aave/protocol-v2": "^1.0.1",
@@ -38,7 +36,7 @@
     "@chainlink/token": "^1.1.0",
     "@conflux-/aragon-os": "^4.4.4",
     "@nomiclabs/hardhat-truffle5": "^2.0.0",
-    "@openzeppelin/contracts": "^3.4.1",
+    "@openzeppelin/contracts": "^3.4.2",
     "babel-eslint": "^10.1.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.22.0",

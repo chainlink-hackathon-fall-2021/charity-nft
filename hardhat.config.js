@@ -33,8 +33,11 @@ module.exports = {
             // // If you want to do some forking, uncomment this
             forking: {
               url: MAINNET_RPC_URL,
-              blockNumber: 21720170
-            }
+              blockNumber: 22017870
+            },
+            accounts: {
+                mnemonic: MNEMONIC,
+            },
         },
         localhost: {
         },
@@ -97,6 +100,9 @@ module.exports = {
         compilers: [
             {
                 version: "0.8.7"
+            },
+            {
+                version: "0.7.0"
             },
             {
                 version: "0.6.12"
