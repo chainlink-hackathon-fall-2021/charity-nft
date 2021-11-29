@@ -149,6 +149,7 @@ const Pools = (props) => {
     isapproveFetching,
     isApproveLoading,
   });
+
   return (
     <div className="card" style={{ padding: "2%", borderRadius: 25 }}>
       <div class="card-content">

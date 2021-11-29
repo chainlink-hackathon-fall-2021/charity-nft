@@ -91,7 +91,8 @@ const Header = () => {
                 Pools
               </h5>
             </NavLink>
-
+            
+            <NavLink to='/campaignForm'>
             <h5
               className="text-color-main inline-block text-bold"
               style={{
@@ -100,6 +101,7 @@ const Header = () => {
             >
               Campaigns
             </h5>
+            </NavLink>
             <h5
               className="text-color-main inline-block text-bold"
               style={{
