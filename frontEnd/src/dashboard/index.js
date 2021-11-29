@@ -291,12 +291,11 @@ const Dashboard = () => {
                     paddingBottom: 0,
                   }}
                 >
-                  {stats.depositAPR && stats.depositAPR.toFixed(2)}%
-                  {/* {stats.depositAPY}% APY */}
+                  {stats.depositAPY && 3.6}%{/* {stats.depositAPY}% APY */}
                 </p>
                 <h5>APR</h5>
                 <h5>
-                  ({stats.depositAPY && 3.6}% APY)
+                  ({stats.depositAPR.toFixed(2)}% APY)
                   {/* {stats.depositAPY}% APY */}
                 </h5>
                 <h6 className="table">
