@@ -1,12 +1,9 @@
-import ParticlesBg from "particles-bg";
 import React, { useEffect, useState } from "react";
 import { useMoralis, useWeb3ExecuteFunction } from "react-moralis";
-import { Main, Card } from "@aragon/ui";
 import { NavLink } from "react-router-dom";
+import millify from "millify";
 import LoginForm from "../login";
 import Header from "../navbar/header";
-import CampaignList from "./campaignList";
-import CreateCampaign from "./createCampaign";
 import { abi as AAVEDAIDonorsPoolABI } from "../contracts/AAVEDAIDonorsPool.json";
 import { abi as LendingPoolABI } from "../contracts/ILendingPool.json";
 
@@ -117,30 +114,29 @@ const Dashboard = () => {
       asset: window.config.DAI_ADDRESS,
     },
   });
-  console.log(share);
   useEffect(() => {
     if (!isDepositLoading && deposit) {
       setStats((stats) => ({
         ...stats,
-        deposit,
+        deposit: deposit / 10 ** 18,
       }));
     }
     if (!isTvdLoading && tvd) {
       setStats((stats) => ({
         ...stats,
-        tvd,
+        tvd: tvd / 10 ** 18,
       }));
     }
     if (!isTvlLoading && tvl) {
       setStats((stats) => ({
         ...stats,
-        tvl,
+        tvl: tvl / 10 ** 18,
       }));
     }
     if (!isEarningLoading && earning) {
       setStats((stats) => ({
         ...stats,
-        earning,
+        earning: earning / 10 ** 18,
       }));
     }
     if (!isShareLoading && share) {
@@ -150,7 +146,7 @@ const Dashboard = () => {
         shareValue: share.shareValue,
       }));
     }
-    if (!isShareLoading && reserveData) {
+    if (!isReserveDataLoading && reserveData) {
       const _depositAPR = parseInt(reserveData.currentLiquidityRate) / RAY;
       setStats((stats) => ({
         ...stats,
@@ -217,21 +213,29 @@ const Dashboard = () => {
           <h2>Invest and Earn on your investment</h2>
         </div> */}
         {/* Total Amount and Donated Card  */}
-        <h2
-          class="display-4 "
-          style={{ marginTop: "80px", marginBottom: "60px" }}
+        <h3
+          class="display-3"
+          style={{
+            marginTop: "30px",
+            marginBottom: "30px",
+            fontWeight: "700",
+          }}
         >
-          Endow is community governed donation platform to fund social compaigns
-          by leveraging best interests from DeFi platforms.
-        </h2>
-        <div className="row" style={{ paddingTop: 40, borderRadius: 40 }}>
+          Endow - A DeFi proof of donation investment product (NFTs) targeted
+          towards HODLERS who want to share their investment rewards from yield
+          farming with community selected (DAO voting) charitable campaigns.
+        </h3>
+        <div className="row" style={{ paddingTop: 20, borderRadius: 40 }}>
           {/* Headings */}
 
           <div className="card col s12" style={{ borderRadius: 25 }}>
             <div className="col s4">
               <div className="row center">
                 <h3 className="col s12" style={{ fontSize: 70 }}>
-                  {`$${stats?.deposit}`}
+                  {`$${millify(stats?.deposit, {
+                    precision: 2,
+                    decimalSeparator: ",",
+                  })}`}
                 </h3>
                 <p className="col s12" style={{ fontSize: 20 }}>
                   You Invested
@@ -241,7 +245,10 @@ const Dashboard = () => {
             <div className="col s4">
               <div className="row center">
                 <h3 className="col s12" style={{ fontSize: 70 }}>
-                  {`$${stats?.shareValue}`}
+                  {`$${millify(stats?.shareValue, {
+                    precision: 2,
+                    decimalSeparator: ",",
+                  })}`}
                   {/* <span style={{ fontSize: 15 }}>
                     ({stats?.share ? `${stats?.shareValue} %` : "N/A"})
                   </span> */}
@@ -256,7 +263,10 @@ const Dashboard = () => {
             <div className="col s4">
               <div className="row center">
                 <h3 className="col s12" style={{ fontSize: 70 }}>
-                  {`$${stats?.tvd}`}
+                  {`$${millify(stats?.tvd, {
+                    precision: 2,
+                    decimalSeparator: ",",
+                  })}`}
                 </h3>
                 <p className="col s12" style={{ fontSize: 20 }}>
                   Total Amount Donated
@@ -268,7 +278,10 @@ const Dashboard = () => {
 
         <div className="center" style={{ paddingTop: 40, borderRadius: 40 }}>
           <div className="row">
-            <div className="card col s5 center" style={{ borderRadius: 25 }}>
+            <div
+              className="card col s3 center"
+              style={{ borderRadius: 25, marginLeft: "4%" }}
+            >
               <div className="row">
                 <p
                   className="col s12"
@@ -278,11 +291,11 @@ const Dashboard = () => {
                     paddingBottom: 0,
                   }}
                 >
-                  {stats.depositAPR && stats.depositAPR.toFixed(2)}% APR
-                  {/* {stats.depositAPY}% APY */}
+                  {stats.depositAPY && 3.6}%{/* {stats.depositAPY}% APY */}
                 </p>
+                <h5>APR</h5>
                 <h5>
-                  ({stats.depositAPY && stats.depositAPY.toFixed(2)}% APY)
+                  ({stats.depositAPR.toFixed(2)}% APY)
                   {/* {stats.depositAPY}% APY */}
                 </h5>
                 <h6 className="table">
@@ -293,24 +306,26 @@ const Dashboard = () => {
                     alt=""
                   />
                 </h6>
-                <p
+                {/* <p
                   className="col s12"
                   style={{ color: "white", fontSize: 30, margin: 0 }}
                 >
                   Get Invested and Start Earning
-                </p>
+                </p> */}
                 <NavLink to="/investmentProfile">
-                  <a className="waves-effect text-color-bg darken-1 btn">
+                  <a
+                    className="waves-effect text-color-bg darken-1 btn"
+                    style={{
+                      marginTop: "30px",
+                    }}
+                  >
                     View Investments
                   </a>
                 </NavLink>
               </div>
             </div>
-            <div className="col s2" />
-            <div
-              className="card col s5 center"
-              style={{ borderRadius: 25, height: "300px" }}
-            >
+            <div className="col s1"></div>
+            <div className="card col s3 center" style={{ borderRadius: 25 }}>
               <div className="row">
                 <p
                   className="col s12"
@@ -321,7 +336,54 @@ const Dashboard = () => {
                   }}
                 >
                   <h3 className="col s12" style={{ fontSize: 70 }}>
-                    {`$${stats?.tvl}`}
+                    {`$${millify(stats?.tvd, {
+                      precision: 2,
+                      decimalSeparator: ",",
+                    })}`}
+                  </h3>
+                </p>
+                <p className="col s12" style={{ fontSize: 20, margin: 0 }}>
+                  Total Value Donated
+                </p>
+                <p className="col s12" style={{ fontSize: 30, margin: 0 }}>
+                  Vote for a Campaign
+                </p>
+                <h6 className="table">
+                  <span className="vertical-align">Powered by</span>
+                  <img
+                    src="https://assets.website-files.com/602ced7da46f594dd6700e15/602cf7ea9fc1f41358f0ae27_5e99778310343ed2dfe89331_logo_big.svg"
+                    className="logo-small vertical-align"
+                    alt=""
+                  />
+                </h6>
+                <NavLink to="/campaignBoard">
+                  <a
+                    className="waves-effect text-color-bg darken-1 btn"
+                    style={{
+                      marginTop: "30px",
+                    }}
+                  >
+                    View Campaigns
+                  </a>
+                </NavLink>
+              </div>
+            </div>
+            <div className="col s1"></div>
+            <div className="card col s3 center" style={{ borderRadius: 25 }}>
+              <div className="row">
+                <p
+                  className="col s12"
+                  style={{
+                    fontSize: 100,
+                    margin: 0,
+                    paddingBottom: 0,
+                  }}
+                >
+                  <h3 className="col s12" style={{ fontSize: 70 }}>
+                    {`$${millify(stats?.tvl, {
+                      precision: 2,
+                      decimalSeparator: ",",
+                    })}`}
                   </h3>
                 </p>
                 <p className="col s12" style={{ fontSize: 20, margin: 0 }}>
@@ -339,12 +401,18 @@ const Dashboard = () => {
                   />
                 </h6>
                 <NavLink to="/campaignBoard">
-                  <a className="waves-effect text-color-bg darken-1 btn">
+                  <a
+                    className="waves-effect text-color-bg darken-1 btn"
+                    style={{
+                      marginTop: "30px",
+                    }}
+                  >
                     View Campaigns
                   </a>
                 </NavLink>
               </div>
             </div>
+            <div className="col s1"></div>
           </div>
         </div>
       </div>
