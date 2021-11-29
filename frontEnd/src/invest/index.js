@@ -133,8 +133,8 @@ const Pools = (props) => {
     contractAddress: window.config.DAI_ADDRESS,
     functionName: "approve",
     params: {
-      spender: window.config.DAI_ADDRESS,
-      amount: depositAmount,
+      spender: window.config.DONATION_POOL_ADDRESS,
+      amount: web3.utils.toWei(`${depositAmount}`, "ether"),
     },
   });
 
@@ -149,7 +149,7 @@ const Pools = (props) => {
     contractAddress: window.config.DONATION_POOL_ADDRESS,
     functionName: "deposit",
     params: {
-      _amount: depositAmount,
+      _amount: web3.utils.toWei(`${depositAmount}`, "ether"),
       _donationPercentage: web3.utils.toBN(interestPercentage),
     },
   });
